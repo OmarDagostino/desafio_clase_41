@@ -67,3 +67,5 @@ app.use('/apidocs',swaggerUiExpress.serve,swaggerUiExpress.setup(specs));
 
 // dinámica del CHAT
 chatController(server)
+
+export default app

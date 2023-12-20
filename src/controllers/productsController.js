@@ -1,5 +1,6 @@
 import { ObjectId } from 'mongodb';
 import { productServices } from '../services/productsServices.js';
+import session from 'express-session';
 import {Router} from 'express';
 const router = Router ()
 import bodyParser from 'body-parser';
@@ -12,6 +13,7 @@ import { CustomError } from '../errorManagement/diccionarioDeErrores.js';
 async function getProducts (req, res) {
   let customStatusCode =500 ;   
   try {
+
     const limit = parseInt(req.query.limit) || 10;
     const page = parseInt(req.query.page) || 1;
     const sortOrder = req.query.sort; 
@@ -57,6 +59,7 @@ async function getProducts (req, res) {
     res.status(200).json(response);
   } catch (error) {
     if (customStatusCode===500) {
+      console.log ('error', error)
       let error = CustomError.createCustomError(16);
           customStatusCode=error.codigo;
     }

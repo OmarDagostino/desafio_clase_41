@@ -5,6 +5,7 @@ const program = new Command();
 
 program
   .addOption(new Option("-m, --modo <modo>", "Modo en que corre la app").choices(["development", "staging", "production"]).default('development'))
+  .allowUnknownOption() 
   .parse(process.argv);
 
 export const opciones = program.opts();

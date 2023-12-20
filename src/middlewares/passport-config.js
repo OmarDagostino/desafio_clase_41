@@ -56,22 +56,6 @@ passport.use('login', new local.Strategy({
 usernameField:'email', passReqToCallback : true
 }, async(req,username, password, done)=> {
   try {
-   
-    const emailAdministrador = config.EMAIL_ADMINISTRADOR
-    const passwordAdministrador = config.PASSWORD_ADMINISTRADOR
-    let adminUsuario = {}
-    req.usuario = {}
-    if (username === emailAdministrador && password === passwordAdministrador) {
-      // Si las credenciales coinciden con el administrador
-     adminUsuario = {
-        nombre: 'Administrador',
-        carrito: null,
-        email: username,
-        typeofuser: 'admin',
-        id: '1',
-      };
-      return done(null, adminUsuario);
-    }
 
     if (!username || !password) {
        return done (null,false)
@@ -80,7 +64,7 @@ usernameField:'email', passReqToCallback : true
     password=crypto.createHmac('sha256','palabraSecreta').update(password).digest('base64')
 
     req.usuario = await usersServices.obtenerUsuarioPorEmail({username })
-  
+        
     if(!req.usuario) {
       return done (null,false)
     } else {
@@ -140,19 +124,9 @@ passport.serializeUser((usuario, done) => {
 });
 
 passport.deserializeUser(async (id, done) => {
-    if (id!=='1') {let usuario = await usersServices.obtenerUsuarioPorId (id);
+    let usuario = await usersServices.obtenerUsuarioPorId (id);
     return done(null,usuario)
-  } else {
-    let usuario = {
-      nombre : 'Administrador',
-      carrito : null,
-      email : config.EMAIL_ADMINISTRADOR,
-      typeofuser : 'admin',
-      id:'1'
-    };
-    return done(null, usuario)
-  }
-  }
+}
 );
 
 // fin del manejo de sesiones con passport
