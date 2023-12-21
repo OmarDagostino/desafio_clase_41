@@ -4,7 +4,8 @@ import { chatModel } from '../../src/models/chat.model.js';
 import express from 'express';
 
 
-// dinámica del CHAT
+// sp dinámica del CHAT
+// en CHAT interaction 
 
 export function chatController(server) {
   const app = express();

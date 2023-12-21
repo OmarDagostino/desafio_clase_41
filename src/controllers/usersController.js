@@ -21,25 +21,29 @@ const transport = nodemailer.createTransport({
 
 router.use(express.urlencoded({ extended: true }));
 
-// Login con email con error
+// sp Login con email con error
+// en Email login with error
 
 async function errorLogin (req,res)  {
     res.redirect('/login?error=Login con error')    
     };
 
-// Login de Git Hub con error
+// sp Login de Git Hub con error
+// en GitHub login with error
 
 async function errorLoginGitHub (req,res) {
     res.redirect('/loginGitHub?error=**Login con error**')    
     };
 
-// registro con error
+// sp registro con error
+// en registration with error
 
 async function errorRegistro (req,res) {
     res.redirect('/registro?error=Error de registro')    
     };
 
-// Login de un usuario o del administrador
+// sp Login de un usuario o del administrador con email y password
+// en user or administrator login with email and password
 async function Login (req, res, next) {
     
     req.session.usuario = req.user;
@@ -47,19 +51,25 @@ async function Login (req, res, next) {
     req.session.admin = false;
 
     if (req.user && req.user.email === config.EMAIL_ADMINISTRADOR) {
-      // Establece una propiedad 'admin' en la sesión para identificar al administrador
+      // sp Establece una propiedad 'admin' en la sesión para identificar al administrador
+      // en Set 'amdin' property boolean in order to identify administrator
       req.session.admin = true;
     }
   
     if (req.session.admin) {
-      return res.redirect('/admin'); // Redirige al administrador
+      // sp Redirige al menu del administrador 
+      // en Administrator menu redirects
+      return res.redirect('/admin'); 
     } else {
-      return res.redirect('/products'); // Redirige al usuario
+      // sp Redirige al usuario
+      // en User redirects
+      return res.redirect('/products'); 
     }
   };
 
 
-// logOut
+// sp hacer el logOut
+// en Logout process
 
 async function logout(req,res) {
 
@@ -70,7 +80,8 @@ async function logout(req,res) {
 
 }
 
-// mostrar los datos del usuario que esta registrado
+// sp mostrar los datos del usuario que esta registrado
+// en return users'data 
 
 async function current (req,res) {
   const usuario= req.dto.usuario 
@@ -78,14 +89,16 @@ async function current (req,res) {
 
 }
 
-// mostrar los datos del usuario que esta registrado con handlebars
+// sp mostrar los datos del usuario que esta registrado con handlebars
+// en return users'data in order to show it through hadlebars
 
 async function current1 (req,res) {
   
   return res.redirect('./current')
 }
 
-// actualizar el tipo de usuario (premium o user)
+// sp actualizar el tipo de usuario (premium o user)
+// en update type of user (premium or user)
  async function premium (req,res) {
 try {
   const email = req.params.email
@@ -110,7 +123,8 @@ catch (error){
 }
  }
 
-// solicitar recuperar la contraseña 
+// sp solicitar recuperar la contraseña 
+// en require a new password
 
  async function forgot(req, res, next) {
   
@@ -144,7 +158,8 @@ catch (error){
   }
 }
 
-// efectuar la recuperación de la contraseña
+// sp efectuar la recuperación de la contraseña
+// en password re-start process
 
 async function recuperacion (req,res,next) {
   let { email, newPassword } = req.body;
@@ -181,12 +196,12 @@ async function recuperacion (req,res,next) {
   }
 }
 
+// sp función para validar el formato de un correo electrónico
+// en email format check function 
+
 function validarCorreoElectronico(correo) {
   const expresionRegular = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   return expresionRegular.test(correo);
 }
-
-// fin de la funcion para validar el formato del correo electronico
-
   
   export default {errorLogin, errorLoginGitHub, premium, errorRegistro, Login ,logout, current, current1, forgot, recuperacion}

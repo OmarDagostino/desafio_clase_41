@@ -17,7 +17,8 @@ const transport = nodemailer.createTransport({
     pass:config.GMAIL_PASS
   }
 })
-// GET para retornar un carrito por su ID
+// sp GET para retornar un carrito por su ID
+// en GET to return a cart by ID
 async function getCarrito (req, res) {
   let customStatusCode =500 ;   
   try {
@@ -46,7 +47,8 @@ async function getCarrito (req, res) {
   }
 };
 
-// POST para agregar un producto a un carrito existente
+// sp POST para agregar un producto a un carrito existente
+// en POST in order to add a product to en existing cart
 async function agregarProducto(req, res) {
   let customStatusCode =500 ;   
   let validObjectId
@@ -70,7 +72,8 @@ async function agregarProducto(req, res) {
       throw (error);
     }
 
-    // Añadir el producto al carrito
+    // sp Añadir el producto al carrito
+    // en add product to cart
 
     validObjectId = ObjectId.isValid(productId) ? new ObjectId(productId) : null;
     if (!validObjectId) 
@@ -119,14 +122,16 @@ async function agregarProducto(req, res) {
     res.status(customStatusCode).send(`${error.descripcion} `);
   } }
 
-// POST para crear un nuevo carrito
+// sp POST para crear un nuevo carrito
+// en POST to create a new cart
 async function crearCarrito(req, res) {
     let customStatusCode =500 ;   
   try {
       const productId = req.params.pid;
       const quantity = 1;
   
-      // Verificar si el producto existe en la base de datos de productos
+      // sp Verificar si el producto existe en la base de datos de productos
+      // en product check register in product data base
       const validObjectId = ObjectId.isValid(productId) ? new ObjectId(productId) : null;
       if (!validObjectId) { 
         let error = CustomError.createCustomError(4);
@@ -165,7 +170,9 @@ async function crearCarrito(req, res) {
     }
   };
 
-// POST para hacer el proceso de compra
+// sp POST para hacer el proceso de compra
+// en POST for buying process
+
 async function procesoDeCompra (req,res) {
   let customStatusCode =500 ;   
   try{ 
@@ -178,7 +185,8 @@ async function procesoDeCompra (req,res) {
       throw (error);
     }
    let updatedCart = cart 
-    // comprobacion de stock suficiente y actualizacion 
+    // sp comprobacion de stock suficiente y actualizacion 
+    // en stock check / update
 
     const productsToTicket = []
     const productsToWait = []
@@ -209,7 +217,8 @@ async function procesoDeCompra (req,res) {
       producto.stock = newStock
       await productServices.actualizarProducto(producto, ProductId)
     }
-    // calculo del total del ticket 
+    // sp calculo del total del ticket 
+    // en compute total ticket
 
     const totalTicket = productsToTicket.reduce((total, item) => {
       const subtotal = item.price * item.quantity;
@@ -217,18 +226,22 @@ async function procesoDeCompra (req,res) {
     }, 0);
 
 
-    // calculo de descuentos e impuestos 
+    // sp calculo de descuentos e impuestos 
+    // en discount and taxes calculations
 
     const discounts = 0;
     const taxes = 0;
     const amount = totalTicket - discounts + taxes;
 
+    // sp generacion del ticket de compra
+    // en making a ticket
     let emailContent = ''
     let sendermail=''
     const user= await usersServices.obtenerUsuarioPorCartid (cartId)
     const userId = user._id
     const useremail = user.email
-    // generacion del ticket de compra
+
+    
     if (productsToTicket.length!==0){
       let codigoMayor = await ticketsServices.obtenerCodigoMayor()
       codigoMayor++
@@ -245,7 +258,8 @@ async function procesoDeCompra (req,res) {
 
     ticketsServices.crearTicket(newtickect)
     
-    // envio de correo al usuario con el ticket de compra
+    // sp envio de correo al usuario con el ticket de compra
+    // en ticket email sending 
   
     const useremail = user.email
     const sendermail = config.GMAIL_USER
@@ -272,7 +286,8 @@ async function procesoDeCompra (req,res) {
     });
   }
     
-    // actualizar carrito con los productos pendientes sin stock 
+    // sp actualizar carrito con los productos pendientes sin stock 
+    // en cart update with the pending products (with insuficient stock)
     updatedCart.products = []; 
 
 if (productsToWait.length > 0) {
@@ -289,7 +304,8 @@ if (productsToWait.length > 0) {
       
       cartsServices.actualizarCarrito (updatedCart,cartId)
 
-    // enviar mail del carrito pendiente de stock 
+    // sp enviar mail del carrito pendiente de stock 
+    // en remaining products cart email 
     
     if (productsToTicket.length !== 0 )  {
         let subject = `Carrito de compra ${cartId}`
@@ -326,7 +342,8 @@ if (productsToWait.length > 0) {
   }
 }
 
-// DELETE para eliminar un producto de un carrito 
+// sp DELETE para eliminar un producto de un carrito 
+// en product erase from a cart
 async function eliminarProductoDelCarrito (req, res) {
   let customStatusCode =500 ;   
   try {
@@ -381,7 +398,8 @@ async function eliminarProductoDelCarrito (req, res) {
     res.status(customStatusCode).send(`${error.descripcion} `);
   }};
 
-// DELETE para eliminar todos los productos de un carrito 
+// sp DELETE para eliminar todos los productos de un carrito 
+// en all product erase from a cart
 async function eliminarTodosProductosDelCarrito (req, res) {
     let customStatusCode =500 ;   
   try {
@@ -419,7 +437,8 @@ async function eliminarTodosProductosDelCarrito (req, res) {
       }
   };
 
-// PUT para actualizar la cantidad de un producto de un carrito existente
+// sp PUT para actualizar la cantidad de un producto de un carrito existente
+// en PUT to update product quatity in a specific  cart
 async function actualizarCantidadDeUnProducto(req, res) {
   let customStatusCode =500 ;   
   try {
@@ -468,7 +487,8 @@ async function actualizarCantidadDeUnProducto(req, res) {
 };
 
 
-// PUT para actualizar todos los elementos de un carrito
+// sp PUT para actualizar todos los elementos de un carrito
+// en PUT to update the whole cart
 async function actualizarTodoElCarrito(req, res) {
   let customStatusCode =500 ;   
   try {

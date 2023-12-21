@@ -1,5 +1,6 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
+import { elegirIdioma } from './middlewares/elegirIdioma.js';
 import path from 'path';
 import __dirname from './util.js';
 import apiCartRouter from './routes/router.cart.js';
@@ -63,7 +64,7 @@ const swaggerOptions = {
 }
 
 const specs = swaggerJsdoc(swaggerOptions);
-app.use('/apidocs',swaggerUiExpress.serve,swaggerUiExpress.setup(specs));
+app.use('/apidocs', swaggerUiExpress.serve,swaggerUiExpress.setup(specs));
 
 // dinámica del CHAT
 chatController(server)

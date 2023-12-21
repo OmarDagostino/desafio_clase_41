@@ -9,7 +9,8 @@ import { body, validationResult } from 'express-validator';
 import { generateProducts }  from '../util.js';
 import { CustomError } from '../errorManagement/diccionarioDeErrores.js';
 
-// GET para retornar varios productos o todos
+// sp: GET para retornar varios productos o todos
+// en: GET return several products or all
 async function getProducts (req, res) {
   let customStatusCode =500 ;   
   try {
@@ -59,7 +60,7 @@ async function getProducts (req, res) {
     res.status(200).json(response);
   } catch (error) {
     if (customStatusCode===500) {
-      console.log ('error', error)
+    //  console.log ('error', error)
       let error = CustomError.createCustomError(16);
           customStatusCode=error.codigo;
     }
@@ -67,7 +68,8 @@ async function getProducts (req, res) {
   }
 };
 
-// GET para retornar un producto por su ID
+// sp: GET para retornar un producto por su ID
+// en: GET to return one specific product by ID
 async function getProductById (req, res) {
  let customStatusCode = 500;
   try {
@@ -98,7 +100,8 @@ async function getProductById (req, res) {
 };
 
 
-// GET paara retornar 100 productos imaginarios creados con faker-js
+// sp GET para retornar 100 productos imaginarios creados con faker-js
+// en GET to return 100 facking products created by faker-js
 async function getMockingProducts (req,res) {
   let products = [];
 for (let i=0;i<100;i++) {
@@ -108,7 +111,8 @@ res.status(200).json(products);
 }
 
 
-// POST para crear un nuevo producto
+// sp POST para crear un nuevo producto
+// en post for creating a new product
 async function crearProducto(req, res) {
   let customStatusCode =500            ;   
   try {
@@ -121,7 +125,6 @@ async function crearProducto(req, res) {
       newProduct.owner = req.session.usuario.email
       };
    
-    // Verificar si el producto ya existe por su código
     const existingProduct = await productServices.obtenerProductoPorCodigo(newProduct.code);
     if (existingProduct) {
       
@@ -146,7 +149,8 @@ async function crearProducto(req, res) {
 }
 
 
-// PUT para actualizar un producto por su ID
+// sp PUT para actualizar un producto por su ID
+// en PUT for updating a new product by ID
 async function actualizarProducto (req, res) {
   
   let customStatusCode =500            ;   
@@ -155,7 +159,8 @@ async function actualizarProducto (req, res) {
     const updatedProduct = req.body;
 
 
-    // validar formato de las propiedades
+    // sp validar formato de las propiedades
+    // en properties'check
     const validateUpdateProduct = [
         body('title').optional().isString(),
         body('description').optional().isString(),
@@ -190,7 +195,8 @@ async function actualizarProducto (req, res) {
       throw (error);
     }
 
-    // Validar que el owner sea compatible con el tipo de usuario
+    // sp Validar que el owner sea compatible con el tipo de usuario y su email
+    // en owner check : type of user and email
 
     if (req.session.usuario.typeofuser!=='admin' && product.owner !== req.session.usuario.email) 
     {
@@ -199,7 +205,8 @@ async function actualizarProducto (req, res) {
       throw (error);
     }
 
-    // Actualizar el producto
+    // sp Actualizar el producto
+    // en Product update
     for (const key in updatedProduct) {
       if (updatedProduct.hasOwnProperty(key)) {
         product[key] = updatedProduct[key];
@@ -221,7 +228,8 @@ async function actualizarProducto (req, res) {
   }
 };
 
-// DELETE para eliminar un producto por su ID
+// sp DELETE para eliminar un producto por su ID
+// en Product delete by Id
 async function borrarProducto(req, res) {
   let customStatusCode =500 ;
   let updatedProducts=[]   ;   
@@ -243,7 +251,8 @@ async function borrarProducto(req, res) {
       throw (error);
     }
 
-    // Validar que el owner sea compatible con el tipo de usuario
+    // sp Validar que el owner sea compatible con el tipo de usuario y su email
+    // en owner check : type of user and email
 
     if (req.session.usuario.typeofuser!=='admin' && product.owner !== req.session.usuario.email) 
     {

@@ -16,12 +16,18 @@ describe('Probando el proyecto de comercio electrónico', function () {
   
       it('El router debe devolver un objeto con los productos', async function () {
         console.log ('requester')
+        let user=await requester.post("/api/sesions/login?email=juan@camino.com&password=juan")
+        console.log('***** user ****', user.body)
         let response = await requester.get("/api/products")
            
-        expect(response).to.be.an.Object;
-        
+        expect(response).to.have.property('payload');
+        console.log('** response.status**',response.status)
+        console.log('** response.body**',response.body)
+        console.log('** response**',response)
+      
       });
     });
   });
-});
+})
+
 
