@@ -66,6 +66,7 @@ async obtenerCarritoSinPopulate (cid)
 async actualizarCarrito (newcart,cid) 
 {
   try {
+    
     const cartId = cid;
     const validObjectId = ObjectId.isValid(cartId) ? new ObjectId(cartId) : null;
     if (!validObjectId) { 
@@ -78,8 +79,8 @@ async actualizarCarrito (newcart,cid)
           console.error('Carrito no encontrado');
           return;
         }
-            cart = newcart;
-            await cart.save();
+        cart.products = newcart.products
+        await cart.save();
       
         }
       

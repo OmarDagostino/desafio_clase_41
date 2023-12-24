@@ -2,12 +2,14 @@ import { describe, it, before } from 'mocha';
 import mongoose from 'mongoose'
 import chai from 'chai';
 import supertest from 'supertest-session';
+import {productModel} from '../src/models/product.model.js';
 
 await mongoose.connect('mongodb+srv://omardagostino:laly9853@cluster0.x1lr5sc.mongodb.net/ecommerce1')
 
 const expect=chai.expect
 const requester=supertest("http://localhost:8080")
 let productId
+let cartId
 
 describe('Probando el proyecto de comercio electrónico', function () {
   this.timeout(20000);
@@ -17,10 +19,10 @@ describe('Probando el proyecto de comercio electrónico', function () {
     })
 
   describe('Pruebas del modulo de carritos', function () {
-    describe('Test 1 : Prueba del endpoint POST para crear un carrito nuevo', function () {
+    describe('Test 1 : Prueba del endpoint POST para agregar un poducto a un carrito', function () {
   
-      it('El router debe crear un carrito con el producto informado con cantidad 1', async function () {
-       
+      it('El router debe agregar a un carrito con el producto informado con cantidad 1', async function () {
+      
         let usuarioPrueba={email:"usuarioDePrueba@gmail.com", password:"prueba"}
         let user1 = await requester.post("/api/sesions/logign").send(usuarioPrueba)
         if (user1.status !== 200){
@@ -28,53 +30,51 @@ describe('Probando el proyecto de comercio electrónico', function () {
             let user = await requester.post("/api/sesions/registro").send(registroPrueba)
             user1 = await requester.post("/api/sesions/login").send(usuarioPrueba)
         }
-       
-        let response = await requester.get("/api/products")
-        let productId = response.body.payload[0]._id
+        let usuario = await requester.get("/api/sesions/current")
+        cartId = usuario.body.usuario.cartId
+        
+        const existingProduct = await productModel.findOne();
+        let objectProductId = existingProduct._id
+        productId = objectProductId.toString()
 
-        console.log ('** user1**', user1)
-        expect(response.body.status).equal('success') 
+        let borrarCarrito = await requester.delete(`/api/carts/${cartId}`)
+
+        let carritoDePrueba = await requester.post(`/api/carts/${cartId}/product/${objectProductId}`)
+        
+        expect(carritoDePrueba.status).equal(201) 
+
+        let contenidoDelCarrito = await requester.get(`/api/carts/${cartId}`)
+        expect(contenidoDelCarrito.body.products[0].productId._id).to.be.equal(productId)
+        
+        expect(contenidoDelCarrito.body.products[0].quantity).to.be.equal(1)
+
       });
     });
-    // describe('Test 2 : Prueba del endpoint POST para crear un producto', function () {
-  
-    //   it('El router debe crear un producto con todas sus propiedades y dar una respuesta 200', async function () {
-             
-    //     let productoPrueba ={title:"producto de prueba", description:"descripcion del producto de prueba", code:"CODIGODEPRUEBA", price: 1200, stock: 100, category:"categoriadeprueba" }
-    //     let response1 = await requester.post("/api/products").send(productoPrueba)
-    //     expect(response1.status).equal(200);
 
-    //     let response2 = await requester.get("/api/products?limit=10000000000")
-    //     const index = response2.body.payload.findIndex(product => product.code === 'CODIGODEPRUEBA');
-    //     expect(response2.body.payload[index]).to.have.property('title')
-    //     expect(response2.body.payload[index]).to.have.property('description')
-    //     expect(response2.body.payload[index]).to.have.property('price')
-    //     expect(response2.body.payload[index]).to.have.property('stock')
-    //     expect(response2.body.payload[index]).to.have.property('category')
-    //     expect(response2.body.payload[index]).to.have.property('owner')
-    //     expect(response2.body.payload[index]).to.have.property('status')
-    //     productId = response2.body.payload[index]._id
-        
-    //   });
-    // });
-    // describe('Test 3 : Prueba del endpoint get para buscar un producto por su ID', function () {
+    describe('Test 2 : Prueba del endpoint GET para retornar un carrito por su Id', function () {
   
-    //   it('El router debe deveolver las propiedades del producto y devolver una respuesta 200', async function () {
-             
-    //     let response3 = await requester.get("/api/products/"+`${productId}`)
-    //     expect(response3.status).equal(200);
+      it('El router debe obtener los productos de un carrito y  dar una respuesta 200', async function () {
+              
+        let carritoObtenido= await requester.get(`/api/carts/${cartId}`)
+        expect(carritoObtenido.status).equal(200);
 
-    //     expect(response3.body).to.have.property('title')
-    //     expect(response3.body).to.have.property('description')
-    //     expect(response3.body).to.have.property('price')
-    //     expect(response3.body).to.have.property('stock')
-    //     expect(response3.body).to.have.property('category')
-    //     expect(response3.body).to.have.property('owner')
-    //     expect(response3.body).to.have.property('status')
+        expect(carritoObtenido.body).to.have.property('products')
+      });
+    });
+    describe('Test 3 : Prueba del endpoint DELETE para eliminar un producto de un carrito', function () {
+  
+      it('El router debe eliminar un producto del array de productos de un carrito y devolver una respuesta 201', async function () {
+             
+        let borrarUnProducto = await requester.delete(`/api/carts/${cartId}/product/${productId}`)
+        expect(borrarUnProducto.status).equal(201);
+
+        let carritoDePrueba = await requester.get(`/api/carts/${cartId}`)
+        let index = carritoDePrueba.body.products.findIndex(p=> p.productId === productId )
+
+        expect (index).equal(-1)
         
-        
-    //   });
-    // });
+      });
+    });
   });
 })
 
