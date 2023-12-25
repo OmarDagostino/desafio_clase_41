@@ -24,8 +24,10 @@ describe('Probando el proyecto de comercio electrónico', function () {
       it('El router debe agregar a un carrito con el producto informado con cantidad 1', async function () {
       
         let usuarioPrueba={email:"usuarioDePrueba@gmail.com", password:"prueba"}
-        let user1 = await requester.post("/api/sesions/logign").send(usuarioPrueba)
-        if (user1.status !== 200){
+        let user1 = await requester.post("/api/sesions/login").send(usuarioPrueba)
+        console.log ('** user1.status**', user1.status)
+        console.log ('*** user1.location***', user1.header.location)
+        if (user1.status === 302 && user1.header.location === '/api/sesions/errorLogin') {
             let registroPrueba={email:"usuarioDePrueba@gmail.com", password:"prueba",name:"usuario",last_name:"Prueba",age:44}
             let user = await requester.post("/api/sesions/registro").send(registroPrueba)
             user1 = await requester.post("/api/sesions/login").send(usuarioPrueba)

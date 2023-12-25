@@ -101,7 +101,6 @@ router.get('/admin', auth, (req,res)=>{
 router.get('/visualizarProductos',auth,async (req,res)=> {
   
   menuManagement (req,res,[0,0,0,0,0,0,0,1,1,0])
-  console.log ('visualizar req', req.session.usuario)
   let typeofuser=req.session.usuario.typeofuser;
   let product
   if (typeofuser=='premium') {

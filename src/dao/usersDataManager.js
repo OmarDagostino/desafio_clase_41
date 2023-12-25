@@ -7,10 +7,12 @@ import {config} from '../config/config.js'
 
 const router = Router ()
 
-// Conectar a la base de datos MongoDB Atlas
+// sp Conectar a la base de datos MongoDB Atlas
+// en MongoDB Atlas connection
 mongoose.connect(config.MONGO_URL);
 
-// Clases para el Manejo de usuarios
+// sp Clases para el Manejo de usuarios
+// en Users classes for data management
 export class usersDataManager { 
 
 

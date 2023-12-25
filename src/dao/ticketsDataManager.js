@@ -6,16 +6,19 @@ import {config} from '../config/config.js'
 
 const router = Router ()
 
-// Conectar a la base de datos MongoDB Atlas
+// sp Conectar a la base de datos MongoDB Atlas
+// en MongoDB Atlas connection
 mongoose.connect(config.MONGO_URL);
 
 
-// clases para el manejo de productos
+// sp clases para el manejo de tickets
+// en Ticket classes for data management
 
 export class ticketsDataManager { 
  
 
-// obtener un ticket por su ID
+// sp obtener un ticket por su ID
+// en get a ticket by ID
 async obtenerTicket (tid) 
 {
   try {
@@ -36,7 +39,8 @@ async obtenerTicket (tid)
   }
 };
 
-// obtener ticket por su codigo
+// sp obtener el próximo número de ticket y actualizar contador 
+// en get the next ticket number and udate register
 
 async obtenerCodigoMayor () 
 { 
@@ -62,7 +66,8 @@ async obtenerCodigoMayor ()
           }
 };
 
-// Crear un nuevo ticket
+// sp Crear un nuevo ticket
+// en New ticket creation
 async crearTicket (newticket) 
 {
     try {

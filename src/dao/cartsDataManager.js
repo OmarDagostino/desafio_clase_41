@@ -7,15 +7,18 @@ import {config} from '../config/config.js'
 
 const router = Router ()
 
-// Conectar a la base de datos MongoDB Atlas
+// sp Conectar a la base de datos MongoDB Atlas
+// en ongoDB Atlas connection
 await mongoose.connect(config.MONGO_URL);
 
-// clases para manejo de datos de carritos
+// sp clases para manejo de datos de carritos
+// en Cart classes for data management
 
 export class cartsDataManager { 
 
 
-// Obtener un carrito por su ID
+// sp Obtener un carrito por su ID
+// en Get a cart by ID
 async obtenerCarrito (cid)
 {
   
@@ -89,7 +92,8 @@ async actualizarCarrito (newcart,cid)
   }
 };
 
-// Crear un nuevo carrito
+// sp Crear un nuevo carrito
+// en new cart start
 async crearCarrito  (newcart)
 {
     try {

@@ -1,6 +1,5 @@
 import express from 'express';
 import handlebars from 'express-handlebars';
-import { elegirIdioma } from './middlewares/elegirIdioma.js';
 import path from 'path';
 import __dirname from './util.js';
 import apiCartRouter from './routes/router.cart.js';
@@ -17,7 +16,6 @@ import chatController from './controllers/chatController.js'
 import { errorHandler } from './errorManagement/errorHandler.js';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
-
 
 const app = express();
 
@@ -51,16 +49,25 @@ const PORT = config.PORT;
 const server = app.listen(PORT, () => {
   console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
 });
-
-const swaggerOptions = {
+let titleDocumentation
+let descriptionDocumentation
+if (config.LANGUAGE_OPTION==='sp'){
+  titleDocumentation = "documentación de los modulos de productos y de carrito",
+  descriptionDocumentation = "Api de comercio electrónico - Back-end - "
+}
+if (config.LANGUAGE_OPTION==='en'){
+  titleDocumentation = "Products and carts modules documentation",
+  descriptionDocumentation = "E-Commerce Api- Back-end - "
+}
+const swaggerOptions = { 
   definition : {
     openapi : '3.0.0',
     info: {
-      title:"documentación de los modulos de productos y de carrito",
-      description:"Api de comercio electrónico - Back-end - "
+      title:`${titleDocumentation}`,
+      description:`${descriptionDocumentation}`
     }
   },
-  apis: [`${__dirname}/docs/**/*.yaml`]
+  apis: [`${__dirname}/docs/${config.LANGUAGE_OPTION}/**/*.yaml`]
 }
 
 const specs = swaggerJsdoc(swaggerOptions);

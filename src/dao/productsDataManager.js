@@ -6,17 +6,20 @@ import {config} from '../config/config.js'
 
 const router = Router ()
 
-// Conectar a la base de datos MongoDB Atlas
+// sp Conectar a la base de datos MongoDB Atlas
+// en MongoDB Atlas connection
 mongoose.connect(config.MONGO_URL);
 
 
-// clases para el manejo de productos
+// sp clases para el manejo de productos
+// en Product classes for data management
 
 export class productsDataManager { 
  
 
 
-// obtener una lista de productos con filtros y paginaciones
+// sp obtener una lista de productos con filtros y paginaciones
+// en get all products or several considering filters and pagination
 
 async obtenerProductos (combinedFilter, options)
 {
@@ -29,7 +32,8 @@ async obtenerProductos (combinedFilter, options)
   }
 };
 
-// obtener un producto por su ID
+// sp obtener un producto por su ID
+// en get a product by ID
 async obtenerProducto (pid) 
 {
   try {
@@ -50,7 +54,8 @@ async obtenerProducto (pid)
   }
 };
 
-// obtener un producto por su codigo
+// sp obtener un producto por su codigo
+// en get a product by code
 
 async obtenerProductoPorCodigo (codigo) 
 {
@@ -63,7 +68,8 @@ async obtenerProductoPorCodigo (codigo)
   }
 };
 
-// Crear un nuevo producto
+// sp Crear un nuevo producto
+// en New product creation
 async crearProducto (newProduct) 
 {
     try {
@@ -81,7 +87,8 @@ async crearProducto (newProduct)
   };
   
 
-// actualizar un productos
+// sp Actualizar un productos
+// en Product update
 async actualizarProducto (producto,pid) 
 {
   try {
@@ -110,7 +117,8 @@ async actualizarProducto (producto,pid)
   }
 };
 
-// Eliminar un producto por su ID
+// sp Eliminar un producto por su ID
+// en Product delete by ID
 async eliminarProducto (pid) 
 {
   try {

@@ -5,6 +5,7 @@ const program = new Command();
 
 program
   .addOption(new Option("-m, --modo <modo>", "Modo en que corre la app").choices(["development", "staging", "production"]).default('development'))
+  .addOption(new Option("-l, --language <language>", "Idioma de la aplicación").choices(["sp", "en"]).default('en')) 
   .allowUnknownOption() 
   .parse(process.argv);
 
@@ -33,6 +34,6 @@ GMAIL_USER : process.env.GMAIL_USER,
 GMAIL_PASS : process.env.GMAIL_PASS,
 PORT : process.env.PORT,
 URLRecuperacionPassword : process.env.URLRecuperacionPassword,
-JWT_SECRET : process.env.JWT_SECRET
-
+JWT_SECRET : process.env.JWT_SECRET,
+LANGUAGE_OPTION: opciones.language
 }

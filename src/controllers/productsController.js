@@ -60,7 +60,6 @@ async function getProducts (req, res) {
     res.status(200).json(response);
   } catch (error) {
     if (customStatusCode===500) {
-    //  console.log ('error', error)
       let error = CustomError.createCustomError(16);
           customStatusCode=error.codigo;
     }
